@@ -1,0 +1,5 @@
+login_check:
+    pattern: /login_check
+#Cerrar sesión
+logout:
+    pattern: /logout

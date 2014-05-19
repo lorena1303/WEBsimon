@@ -1,0 +1,591 @@
+{% extends "::usuario.html.twig" %}
+{% block title %}Grupo Simon: Usuario{% endblock %}
+
+{% block titulo %}  
+<h1>Desarrollo Producción Intelectual</h1>
+{% endblock %}
+{% block submenuderecho %}    
+<a type="submit" class="btn btn-default btn-xs" id="botonSalir" href="{{ path('gs_proyectos_desarrollarproduccionintelectual_buscar') }}">
+    <span class="glyphicon glyphicon-log-out"></span> Salir
+</a>
+{% endblock %}
+
+
+{% block contenido %}
+<br>
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-8">  
+
+
+    </div>
+    <div class="col-xs-6 col-md-4">
+
+
+    </div>
+</div>
+<h2>Tema: <small>{{tema.titulo}}</small></h2>
+<div class="row">
+    <div class="col-md-4">
+        <blockquote>
+            <p>Autor(es)</p>
+    {%for usuario in temaUsuario%}
+  {%if usuario.funcionusuario.nombre == "Autor"   %}
+            <footer>{{ usuario.usuario.primernombre }} {{ usuario.usuario.segundonombre }} {{ usuario.usuario.primerapellido }} {{ usuario.usuario.segundoapellido }}</footer>
+  {% endif %}
+    {% endfor %}
+        </blockquote></div>
+    <div class="col-md-4">
+        <blockquote>
+            <p>Director(es)</p>
+    {%for usuario in temaUsuario%}
+  {%if usuario.funcionusuario.nombre == "Director"   %}
+            <footer>{{ usuario.usuario.primernombre }} {{ usuario.usuario.segundonombre }} {{ usuario.usuario.primerapellido }} {{ usuario.usuario.segundoapellido }}</footer>
+  {% endif %}
+     {% endfor %}
+        </blockquote>
+    </div>
+    <div class="col-md-4">
+        <blockquote>
+            <p>Codirector(es)</p>
+      {%for usuario in temaUsuario%}
+  {%if usuario.funcionusuario.nombre == "Codirector"   %}
+            <footer>{{ usuario.usuario.primernombre }} {{ usuario.usuario.segundonombre }} {{ usuario.usuario.primerapellido }} {{ usuario.usuario.segundoapellido }}</footer>
+  {% endif %}
+        {% endfor %}
+        </blockquote>
+    </div>
+</div>
+
+<h4>Producción:</h4>
+<table class="table table-hover table-condensed table-striped " align="center" style="width: 700px;" id="tablaProduccion">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        {%for espacio in espacioTrabajo%}
+        <tr>
+            <td>
+                <a href="{{ espacio.url }}"> {{ espacio.nombre }}</a>
+            </td>
+            <td id="enlaceSolicitud">
+                <a  name="enlaceSolicitud[]" href="{{ path('gs_proyectos_desarrollarproduccionintelectual_solicitarrevision',{'id': espacio.tema.idtema, 'espacio': espacio.idespaciotrabajo}) }}">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span> Solicitar Revisón
+                </a>
+            </td>
+            <td id="enlaceCompartir">
+                <a href="{{ path('gs_proyectos_desarrollarproduccionintelectual_compartirconmiembros',{'id':espacio.idespaciotrabajo}) }}" data-toggle="modal" data-target="#modalCompartirMiembros">
+                    {%if espacio.compartirmiembros  %}
+                    <span class="glyphicon glyphicon-share"></span>Dejar de compartir con miembros del grupo                  
+                    {%else%}
+                    <span class="glyphicon glyphicon-share"></span> Compartir con miembros del grupo
+                    {%endif%}
+                </a>
+            </td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+<h4>Descripción:</h4>
+{{ descripcionTema|raw }}{# Decodificar html de la descripcion del tema #}
+<h4>Cronograma:</h4>
+  {%for usuario in temaUsuario%}
+  {%if usuario.funcionusuario.nombre == "Autor" and usuario.usuario.numerodocumentoidentidad == user   %}
+<div class="row">
+    <div class="col-xs-6 col-md-4" style="border-color: #000;">
+
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-8" style="text-align: right;">
+
+        <a type="button" class="btn btn-success btn-xs" href="{{ path('gs_proyectos_desarrollarproduccionintelectual_agregaractividadcronograma',{'id': usuario.tema.idtema})}}">
+            <span class="glyphicon glyphicon-plus"></span> Nuevo
+        </a>
+        <button type="button" class="btn btn-default btn-xs" id="botonModificarCronograma">
+            <span class="glyphicon glyphicon-refresh"></span> Modificar
+        </button>
+        <button type="button" class="btn btn-danger btn-xs" id="botonEliminarCronograma">
+            <span class="glyphicon glyphicon-trash"></span> Eliminar
+        </button>
+
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+<table class="table table-hover table-condensed table-striped " align="center">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Hito</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Descripcion</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        {%for actividad in cronograma%}
+        <tr>
+            <td><input type="radio" id="radioCronograma" name="radioCronograma" value="{{actividad.idcronograma}}"></td>
+            <td>{{actividad.hito}}</td>
+            <td>{{actividad.fecharegistro | date ('d-m-Y')}}</td>
+            <td>{{actividad.fecha| date ('d-m-Y')}}</td>
+            <td>{{actividad.descripcion}}</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+<h4>Bibliografia:</h4>
+ {%for usuario in temaUsuario%}
+  {%if usuario.funcionusuario.nombre == "Autor" and usuario.usuario.numerodocumentoidentidad == user   %}
+<div class="row">
+    <div class="col-xs-6 col-md-4" style="border-color: #000;">
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-8" style="text-align: right;">
+        <a type="button"  class="btn btn-success btn-xs" id="botonNuevaBibliografia" href="{{path('gs_proyectos_desarrollarproduccionintelectual_agregarbibliografia',{'id': tema.idtema})}}">
+            <span class="glyphicon glyphicon-plus"></span> Nuevo
+        </a>
+        <button type="button" class="btn btn-primary btn-xs" id="botonAgregarLectura">
+            <span class="glyphicon glyphicon-ok"></span> Lectura con proposito
+        </button>
+        <button type="button" class="btn btn-default btn-xs" id="botonModificarBibliografia">
+            <span class="glyphicon glyphicon-refresh"></span> Modificar
+        </button>
+        <button type="button" class="btn btn-danger btn-xs" id="botonEliminarBibliografia">
+            <span class="glyphicon glyphicon-trash"></span> Eliminar
+        </button>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+<table class="table table-hover table-striped table-condensed" align="center">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Nombre</th>
+            <th>Tipo de elemento bibliográfico</th>
+            <th>Lectura con proposito</th>
+            <th>Categoría</th>
+            <th>Fecha de Registro</th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+          {%for bibliografia in temaBibliografia%}
+        <tr>
+            <td><input type="radio" id="radioBibliografia" name="radioBibliografia" value="{{ bibliografia.bibliografia.idbibliografia }}"></td>
+            <td>{{ bibliografia.bibliografia.nombre }}</td>
+            <td>{{ bibliografia.bibliografia.tipoelementobibliografico.nombre }}</td>
+            <td>{{ render(controller('GSProyectosBundle:Desarrollarproduccionintelectual:Existelecturaconproposito', { 'id': bibliografia.bibliografia.idbibliografia })) }}</td>
+            <td>{{ bibliografia.bibliografia.categoria.nombre }}</td>
+            <td>{{ bibliografia.bibliografia.fecharegistro | date ('d-m-y') }}</td>
+            <td>  <a  href="{{ path('gs_proyectos_desarrollarproduccionintelectual_elementobibliografia_vista',{'id': bibliografia.bibliografia.idbibliografia}) }}" target="_blank" onClick="window.open(this.href, this.target, 'width=702,height=600');
+                    return false;">
+                    <span class="glyphicon glyphicon-eye-open"></span> Ver
+                </a></td>
+        </tr>
+           {%endfor%}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent()}}
+
+<!-- Modal Solicitud Revisión -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea enviar esta solicitud. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-primary" id="botonEnviar" name="botonEnviar"  href="#">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal compartir con miembros del grupo -->
+<div class="modal fade" id="modalCompartirMiembros" tabindex="-1" role="dialog" aria-labelledby="modalCompartirMiembrosLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-primary" id="botonCompartir" name="botonCompartir"  href="#">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal agregar lectura con proposito-->
+<div class="modal fade" id="modalAgregarLectura" tabindex="-1" role="dialog" aria-labelledby="modalCompartirMiembrosLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-success" id="botonModalAgregarLectura" name="botonModalAgregarLectura"  href="#">Ir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal eliminar bibliografia-->
+<div class="modal fade" id="modalEliminarBibliografia" tabindex="-1" role="dialog" aria-labelledby="modalEliminarBibliografiaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción. Si elimina este elemento bibliográfico, con el se eliminara la lectura(s) con proposito segun correspondientes. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-danger" id="botonModalEliminarBibliografia" name="botonModalEliminarBibliografia"  href="#">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal modificar bibliografia-->
+<div class="modal fade" id="modalModificarBibliografia" tabindex="-1" role="dialog" aria-labelledby="modalModificarBibliografiaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-success" id="botonModalModificarBibliografia" name="botonModalModificarBibliografia"  href="#">Ir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal modificar bibliografia-->
+<div class="modal fade" id="modalModificarCronograma" tabindex="-1" role="dialog" aria-labelledby="modalModificarCronogramaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-success" id="botonModalModificarCronograma" name="botonModalModificarCronograma"  href="#">Ir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal eliminar bibliografia-->
+<div class="modal fade" id="modalEliminarCronograma" tabindex="-1" role="dialog" aria-labelledby="modalEliminarCronogramaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Realmente desea ejecutar esta acción.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-danger" id="botonModalEliminarCronograma" name="botonModalEliminarCronograma"  href="#">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade " id="radioVacio" tabindex="-1" role="dialog" aria-labelledby="radioVacioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Alerta</h4>
+            </div>
+            <div class="modal-body">
+                Usted no ha seleccionado ningun elemento. Intentelo de nuevo. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var x;
+    x = $(document);
+    x.ready(inicializarEventos);
+    var urlGlobal;
+    var urlGlobalCompartir;
+    function inicializarEventos() {
+        var btnEnviar;
+        btnEnviar = $('#botonEnviar');
+        btnEnviar.click(enviar);
+
+        /*
+         * **********************
+         * Eliminar cronograma*
+         * **********************
+         */
+
+        var btnEliminarCronograma;
+        btnEliminarCronograma = $('#botonEliminarCronograma');
+        btnEliminarCronograma.click(eliminarCronograma);
+
+        var btnModalEliminarCronograma;
+        btnModalEliminarCronograma = $('#modalEliminarCronograma');
+        btnModalEliminarCronograma.click(modalEliminarCronograma);
+
+        /************************/
+
+        /*
+         * **********************
+         * Modificar Cronograma*
+         * **********************
+         */
+        var btnModificarCronograma;
+        btnModificarCronograma = $('#botonModificarCronograma');
+        btnModificarCronograma.click(modificarCronograma);
+
+        var btnModalModificarCronograma;
+        btnModalModificarCronograma = $('#modalModificarCronograma');
+        btnModalModificarCronograma.click(modalModificarCronograma);
+
+        /************************/
+
+        /*
+         * **********************
+         * Lectura con proposito*
+         * **********************
+         */
+        var btnAgregarLectura;
+        btnAgregarLectura = $('#botonAgregarLectura');
+        btnAgregarLectura.click(agregarLectura);
+
+        var btnModalAgregarLectura;
+        btnModalAgregarLectura = $('#botonModalAgregarLectura');
+        btnModalAgregarLectura.click(modalAgregarLectura);
+
+        /************************/
+
+        /*
+         * **********************
+         * Modificar Bibliografia*
+         * **********************
+         */
+        var btnModificarBibliografia;
+        btnModificarBibliografia = $('#botonModificarBibliografia');
+        btnModificarBibliografia.click(modificarBibliografia);
+
+        var btnModalModificarBibliografia;
+        btnModalModificarBibliografia = $('#modalModificarBibliografia');
+        btnModalModificarBibliografia.click(modalModificarBibliografia);
+
+        /************************/
+
+        /*
+         * **********************
+         * Eliminar bibliografia*
+         * **********************
+         */
+
+        var btnEliminarBibliografia;
+        btnEliminarBibliografia = $('#botonEliminarBibliografia');
+        btnEliminarBibliografia.click(eliminarBibliografia);
+
+        var btnModalEliminarBibliografia;
+        btnModalEliminarBibliografia = $('#botonModalEliminarBibliografia');
+        btnModalEliminarBibliografia.click(modalEliminarBibliografia);
+
+        /************************/
+
+        var btnCompartir;
+        btnCompartir = $('#botonCompartir');
+        btnCompartir.click(compartir);
+
+        var enlace;
+        enlace = $("#enlaceSolicitud a");
+        enlace.click(abrirModal);
+
+        var enlaceCompartir;
+        enlaceCompartir = $("#enlaceCompartir a");
+        enlaceCompartir.click(abrirModalCompartir);
+
+    }
+    
+       function  modalEliminarCronograma() {
+
+        var rtCronograma;
+        rtCronograma = $('#radioCronograma:checked').val();
+        var url;
+        url = "{{ path('gs_proyectos_desarrollarproduccionintelectual_eliminaractividadcronograma', {'id':'text'}) }}";
+        url = url.replace("text", rtCronograma);
+        window.open(url, '_self');
+
+    }
+
+    function eliminarCronograma() {
+
+        var rtCronograma;
+        rtCronograma = $('#radioCronograma:checked').val();
+
+        if (rtCronograma == "" || rtCronograma == null) {
+            $('#radioVacio').modal('show');
+        } else {
+            $('#modalEliminarCronograma').modal('show');
+        }
+    }
+
+    function  modalModificarCronograma() {
+
+        var rtCronograma;
+        rtCronograma = $('#radioCronograma:checked').val();
+        var url;
+        url = "{{ path('gs_proyectos_desarrollarproduccionintelectual_modificaractividadcronograma', {'id': 'text'}) }}";
+        url = url.replace("text", rtCronograma);
+        window.open(url, '_self');
+
+    }
+    function modificarCronograma() {
+
+        var rtCronograma;
+        rtCronograma = $('#radioCronograma:checked').val();
+
+        if (rtCronograma == "" || rtCronograma == null) {
+            $('#radioVacio').modal('show');
+        } else {
+            $('#modalModificarCronograma').modal('show');
+        }
+    }
+    function  modalModificarBibliografia() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+        var url;
+        url = "{{ path('gs_proyectos_desarrollarproduccionintelectual_modificarbibliografia', {'id':tema.idtema,'idbibliografia': 'text'}) }}";
+        url = url.replace("text", rtBibliografia);
+        window.open(url, '_self');
+
+    }
+
+    function modificarBibliografia() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+
+        if (rtBibliografia == "" || rtBibliografia == null) {
+            $('#radioVacio').modal('show');
+        } else {
+            $('#modalModificarBibliografia').modal('show');
+        }
+    }
+
+    function  modalEliminarBibliografia() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+        var url;
+        url = "{{ path('gs_proyectos_desarrollarproduccionintelectual_eliminarbibliografia', {'id':tema.idtema,'idbibliografia': 'text'}) }}";
+        url = url.replace("text", rtBibliografia);
+        window.open(url, '_self');
+
+    }
+    function eliminarBibliografia() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+
+        if (rtBibliografia == "" || rtBibliografia == null) {
+            $('#radioVacio').modal('show');
+        } else {
+            $('#modalEliminarBibliografia').modal('show');
+        }
+    }
+
+    function  modalAgregarLectura() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+        var url;
+        url = "{{ path('gs_proyectos_desarrollarproduccionintelectual_agregarlecturaproposito', {'id': 'text'}) }}";
+        url = url.replace("text", rtBibliografia);
+        window.open(url, '_self');
+
+    }
+    function agregarLectura() {
+
+        var rtBibliografia;
+        rtBibliografia = $('#radioBibliografia:checked').val();
+
+        if (rtBibliografia == "" || rtBibliografia == null) {
+            $('#radioVacio').modal('show');
+        } else {
+            $('#modalAgregarLectura').modal('show');
+        }
+    }
+
+    function compartir() {
+        window.open(urlGlobalCompartir, '_self');
+    }
+
+    function enviar() {
+        window.open(urlGlobal, '_self');
+    }
+
+    function abrirModal() {
+        urlGlobal = $(this).attr("href");
+        $('#myModal').modal('show');
+        return  false;
+        inicializarEventos();
+    }
+
+    function abrirModalCompartir() {
+        urlGlobalCompartir = $(this).attr("href");
+        $('#modalCompartirMiembros').modal('show');
+        return  false;
+        inicializarEventos();
+    }
+
+
+
+</script>
+{% endblock %}

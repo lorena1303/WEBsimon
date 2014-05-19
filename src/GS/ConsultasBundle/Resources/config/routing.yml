@@ -1,0 +1,45 @@
+gs_consultas_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: GSConsultasBundle:Default:index }
+
+gs_consultas_usuario_busquedaavanzada:
+    pattern: consultas/usuario/busquedaAvanzada/{numeroresultados}
+    defaults: { _controller: GSConsultasBundle:Consultasusuario:Busquedaavanzada, numeroresultados: 30 }
+    
+gs_consultas_usuario_vermas:
+    pattern: consultas/usuario/verMas/{numerodocumentoidentidad}.{primernombre}.{segundonombre}.{primerapellido}.{segundoapellido}.{email}
+    defaults: { _controller: GSConsultasBundle:Consultasusuario:Vermas }
+
+gs_consultas_tema_busquedaavanzada:
+    pattern: consultas/tema/busquedaAvanzada/{limite}
+    defaults: { _controller: GSConsultasBundle:ConsultasTema:Busquedaavanzada, limite: 30 }
+    
+gs_consultas_tema_vermas:
+    pattern: consultas/tema/vermas/{titulo}.{estado}
+    defaults: { _controller: GSConsultasBundle:ConsultasTema:Vermas}
+    
+gs_consultas_recurso_busquedaavanzada:
+    pattern: consultas/recurso/busquedaAvanzada/{nombre}.{tiporecurso}.{numeroresultados}
+    defaults: { _controller: GSConsultasBundle:ConsultasRecurso:Busquedaavanzada }
+
+gs_consultas_produccionintelectual_busquedaavanzadaadministrador:
+    pattern: administrador/consultas/produccionintelectual/busquedaAvanzada/{limite}
+    defaults: { _controller: GSConsultasBundle:ConsultasProduccionintelectual:Busquedaavanzada, limite: 30 }
+    
+gs_consultas_produccionintelectual_busquedaavanzadacomunidad:
+    pattern: consultas/produccionintelectual/busquedaAvanzada/{limite}
+    defaults: { _controller: GSConsultasBundle:ConsultasProduccionintelectual:Busquedaavanzadacomunidad, limite: 30 }
+
+#Se pasa el id correspondiente al modelo User y un limite correspondiente a la 
+#cantidad de resultados que pretende ver el usuario
+gs_consultas_proyectos_desarrollarproduccionintelectual_vistaperfilusuario:
+    pattern: usuario/consultas/produccionIntelectual/perfilUsuario/vista/{id}.{limite}
+    defaults: { _controller: GSConsultasBundle:ConsultasProduccionintelectual:Vistaperfil, limite: 5 }
+   
+        
+#Se pasa el id correspondiente al modelo User y un limite correspondiente a la 
+#cantidad de resultados que pretende ver el usuario
+gs_consultas_proyectos_desarrollarproduccionintelectual_vistaperfilusuariocomunidad:
+    pattern: consultas/produccionIntelectual/perfilUsuario/vista/{id}.{limite}
+    defaults: { _controller: GSConsultasBundle:ConsultasProduccionintelectual:Vistaperfilcomunidad, limite: 5 }
+

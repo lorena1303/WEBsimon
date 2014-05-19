@@ -1,0 +1,656 @@
+{% extends "::administrar.html.twig" %}
+{% block title %}GSProyectosBundle:Reportes:Informacioncolciencias{% endblock %}
+{% block titulo %}
+<h1>Información del Grupo SIMON</h1>
+{% endblock %}
+
+            {% block submenuizquierdo %}
+            {% endblock %}
+
+             {% block submenuderecho %}
+            {% endblock %}
+
+{% block contenido %}
+<h2>Usuarios</h2>
+<table class="table table-condensed table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Nombres y Apellidos
+            </th>
+            <th>
+                ROL
+            </th>
+            <th>
+                Documento de Identidad
+            </th>
+            <th>
+                Fecha de Registro
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+{% set counterActivos = 0 %} 
+{% set counterInactivos = 0 %} 
+{% set counterTotal= 0 %} 
+{% set counterEstudiantePregradoActivo = 0 %} 
+{% set counterEstudiantePosgradoActivo = 0 %} 
+{% set counterInvestigarAsociadoActivo = 0 %} 
+{% set counterDirectorActivo = 0 %} 
+{% set counterEstudiantePregradoInactivo = 0 %} 
+{% set counterEstudiantePosgradoInactivo = 0 %} 
+{% set counterInvestigarAsociadoInactivo = 0 %} 
+{% set counterDirectorInactivo = 0 %} 
+{%for usuario in usuarios%}
+{%if usuario.user.enabled and usuario.tipousuario.nombre != 'Administrador'%}
+{%if usuario.tipousuario.idtipousuario == 2%}
+        {% set counterEstudiantePregradoActivo = counterEstudiantePregradoActivo + 1 %}
+{%elseif usuario.tipousuario.idtipousuario == 3%}
+        {% set counterEstudiantePosgradoActivo = counterEstudiantePosgradoActivo + 1 %}
+{%elseif usuario.tipousuario.idtipousuario == 4%}
+        {% set counterInvestigarAsociadoActivo = counterInvestigarAsociadoActivo + 1 %}
+{%elseif usuario.tipousuario.idtipousuario == 5%}
+        {% set counterDirectorActivo = counterDirectorActivo + 1 %}
+{%endif%}
+{% set counterActivos = counterActivos + 1 %}
+{% set counterTotal = counterTotal + 1 %}
+        <tr>
+            <td>
+                {{usuario.primernombre}} {{usuario.segundonombre}} {{usuario.primerapellido}} {{usuario.segundoapellido}}
+            </td>
+            <td>
+                {{usuario.tipousuario.nombre}} 
+            </td>
+            <td>
+                <b>{{usuario.tipodocumentoidentidad.nombre}}:</b> {{usuario.numerodocumentoidentidad}} 
+            </td>
+            <td>
+               {{usuario.fecharegistro | date('d-m-Y')}}
+            </td>
+        </tr>
+ {%elseif usuario.tipousuario.nombre != 'Administrador' and usuario.user.enabled == false %}
+        {%if usuario.tipousuario.idtipousuario == 2%}
+                {% set counterEstudiantePregradoInactivo = counterEstudiantePregradoInactivo + 1 %}
+        {%elseif usuario.tipousuario.idtipousuario == 3%}
+                {% set counterEstudiantePosgradoInactivo = counterEstudiantePosgradoInactivo + 1 %}
+        {%elseif usuario.tipousuario.idtipousuario == 4%}
+                {% set counterInvestigarAsociadoInactivo = counterInvestigarAsociadoInactivo + 1 %}
+        {%elseif usuario.tipousuario.idtipousuario == 5%}
+                {% set counterDirectorInactivo = counterDirectorInactivo + 1 %}
+        {%endif%}
+        {% set counterInactivos = counterInactivos + 1 %}
+        {% set counterTotal = counterTotal + 1 %}
+{%endif%}
+{%endfor%}
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <b>Total Activos:</b>
+            </td>
+            <td>
+                {{ counterActivos }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <b> Total Inactivos:</b>
+            </td>
+            <td>
+                {{ counterInactivos }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <b> Total:</b>
+            </td>
+            <td>
+                {{ counterTotal }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-condensed table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                Estudiantes de Pregrado
+            </th>
+            <th>
+                Estudiantes de Posgrados
+            </th>
+            <th>
+                Investigadores Asociados
+            </th>
+            <th>
+                Directores
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                Activos
+            </th>
+            <td>
+                {{ counterEstudiantePregradoActivo }}
+            </td>
+            <td>
+                {{ counterEstudiantePosgradoActivo }}
+            </td>
+            <td>
+                {{ counterInvestigarAsociadoActivo}}
+            </td>
+            <td>   
+                {{ counterDirectorActivo }}        
+            </td>
+
+        </tr>
+        <tr>
+            <th>
+                Inactivos
+            </th>
+            <td>
+                {{ counterEstudiantePregradoInactivo }}
+            </td>
+            <td>
+                {{ counterEstudiantePosgradoInactivo }}
+            </td>
+            <td>
+                {{ counterInvestigarAsociadoInactivo }}
+            </td>
+            <td>
+                {{ counterDirectorInactivo }}
+            </td>
+
+        </tr>
+
+        <tr>
+            <th>
+                Total
+            </th>
+            <td>
+                {% set totalEstudiantesPregado = counterEstudiantePregradoInactivo + counterEstudiantePregradoActivo %}
+                   {{ totalEstudiantesPregado}}
+            </td>
+            <td>
+                 {% set totalEstudiantesPosgrado = counterEstudiantePosgradoInactivo + counterEstudiantePosgradoActivo %}
+                   {{ totalEstudiantesPosgrado}}
+
+            </td>
+            <td>
+                 {% set totalInvestigadoresAsociados = counterInvestigarAsociadoInactivo +  counterInvestigarAsociadoActivo %}
+                   {{ totalInvestigadoresAsociados}}
+
+            </td>
+            <td>                
+                  {% set totalDirectores = counterDirectorInactivo + counterDirectorActivo %}
+                   {{ totalDirectores}}
+
+            </td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+<h2>Producción en Desarrollo</h2>
+<table class="table table-condensed table-hover table-striped">
+    <thead>
+        <tr>           
+
+            <th>
+                Título
+            </th>
+            <th>
+                Autores
+            </th>
+            <th>
+                Fecha Inicio
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% set enDesarrollo = 0 %} 
+        {%for informacion in produccionEnDesarrollo %}
+         {% set enDesarrollo = enDesarrollo + 1  %} 
+        <tr>
+            <td>
+                {{ informacion.titulo }}
+            </td>
+            <td>
+                 {{ render(controller('GSProyectosBundle:Desarrollarproduccionintelectual:Buscarmiembro', { 'tema': informacion.idtema , 'funcion': '1' })) }}
+            </td>
+            <td>
+                {{ informacion.fecharegistro |date('d-m-Y') }}
+            </td>            
+        </tr>
+         {%endfor%}
+        <tr>
+            <td>
+            </td>
+            <th>                
+            </th>
+            <td>             
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Total:
+            </th>
+            <td>
+                {{ enDesarrollo }}    
+            </td>            
+        </tr>
+    </tbody>
+</table>
+<h2>Producción Intelectual <small>Año en curso</small></h2>
+<table class="table table-condensed table-hover table-striped">
+    <thead>
+        <tr>           
+
+            <th>
+                Título
+            </th>
+            <th>
+                Autores
+            </th>
+            <th>
+                Fecha Inicio
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% set anoCurso = 0 %} 
+        {% set libro = 0 %} 
+        {% set articulo = 0 %} 
+        {% set capituloLibro = 0 %} 
+        {% set ponencia = 0 %} 
+        {% set traduccionObra = 0 %} 
+        {% set trabajoGradoPregrado = 0 %} 
+        {% set trabajoGradoPosgrado = 0 %} 
+        {% set software = 0 %} 
+        {% set modelo = 0 %} 
+        {% set informe = 0 %} 
+        {%for informacion in produccionAnoCurso %}
+
+        {%if informacion.tipoproduccion.idtipoproduccion == 1%}
+        {% set libro = libro + 1  %} 
+        {%endif%}        
+           {%if informacion.tipoproduccion.idtipoproduccion == 2%}
+        {% set articulo = articulo + 1  %} 
+        {%endif%}        
+          {%if informacion.tipoproduccion.idtipoproduccion == 3%}
+        {% set capituloLibro = capituloLibro + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 4%}
+        {% set ponencia = ponencia + 1  %} 
+        {%endif%}        
+          {%if informacion.tipoproduccion.idtipoproduccion == 5%}
+        {% set traduccionObra = traduccionObra + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 6%}
+        {% set trabajoGradoPregrado = trabajoGradoPregrado + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 7%}
+        {% set trabajoGradoPosgrado = trabajoGradoPosgrado + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 8%}
+        {% set software = software + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 9%}
+        {% set modelo = modelo + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 10%}
+        {% set informe = informe + 1  %} 
+        {%endif%}
+
+
+         {% set anoCurso = anoCurso + 1  %} 
+        <tr>
+            <td>
+                {{ informacion.titulo }}
+            </td>
+            <td>
+                 {{ render(controller('GSProyectosBundle:Desarrollarproduccionintelectual:Buscarmiembro', { 'tema': informacion.tema.idtema , 'funcion': '1' })) }}
+            </td>
+            <td>
+                {{ informacion.fecharegistro |date('d-m-Y') }}
+            </td>            
+        </tr>
+         {%endfor%}
+        <tr>
+            <td>
+            </td>
+            <th>                
+            </th>
+            <td>             
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Libro
+            </th>
+            <td>
+ {{ libro }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Artículo 
+            </th>
+            <td>
+ {{ articulo }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Capítulo de Libro 
+            </th>
+            <td>
+ {{ capituloLibro }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Ponencia   
+            </th>
+            <td>
+ {{ ponencia }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Traducción de Obra Ajena   
+            </th>
+            <td>
+ {{ traduccionObra }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Trabajo de grado - Pregrado   
+            </th>
+            <td>
+ {{ trabajoGradoPregrado }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Trabajo de grado - Posgrado   
+            </th>
+            <td>
+                 {{ trabajoGradoPosgrado }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Software    
+            </th>
+            <td>
+ {{ software }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Modelo DS  
+            </th>
+            <td>
+ {{ modelo }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Informe  
+            </th>
+            <td>
+ {{ informe }}  
+            </td>            
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <th>
+                Total:
+            </th>
+            <td>
+                {{ anoCurso }}    
+            </td>            
+        </tr>
+    </tbody>
+</table>
+
+<h2>Producción Intelectual <small>Total</small></h2>
+
+<table class="table table-condensed table-hover table-striped">
+    <thead>
+        <tr>      
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set anoCurso = 0 %} 
+        {% set libro = 0 %} 
+        {% set articulo = 0 %} 
+        {% set capituloLibro = 0 %} 
+        {% set ponencia = 0 %} 
+        {% set traduccionObra = 0 %} 
+        {% set trabajoGradoPregrado = 0 %} 
+        {% set trabajoGradoPosgrado = 0 %} 
+        {% set software = 0 %} 
+        {% set modelo = 0 %} 
+        {% set informe = 0 %} 
+        {%for informacion in produccionTotal %}
+
+        {%if informacion.tipoproduccion.idtipoproduccion == 1%}
+        {% set libro = libro + 1  %} 
+        {%endif%}        
+           {%if informacion.tipoproduccion.idtipoproduccion == 2%}
+        {% set articulo = articulo + 1  %} 
+        {%endif%}        
+          {%if informacion.tipoproduccion.idtipoproduccion == 3%}
+        {% set capituloLibro = capituloLibro + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 4%}
+        {% set ponencia = ponencia + 1  %} 
+        {%endif%}        
+          {%if informacion.tipoproduccion.idtipoproduccion == 5%}
+        {% set traduccionObra = traduccionObra + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 6%}
+        {% set trabajoGradoPregrado = trabajoGradoPregrado + 1  %} 
+        {%endif%}        
+        {%if informacion.tipoproduccion.idtipoproduccion == 7%}
+        {% set trabajoGradoPosgrado = trabajoGradoPosgrado + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 8%}
+        {% set software = software + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 9%}
+        {% set modelo = modelo + 1  %} 
+        {%endif%}
+        {%if informacion.tipoproduccion.idtipoproduccion == 10%}
+        {% set informe = informe + 1  %} 
+        {%endif%}
+
+
+         {% set anoCurso = anoCurso + 1  %} 
+
+         {%endfor%}
+        <tr>
+            <th>                
+            </th>
+            <td>             
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Libro
+            </th>
+            <td>
+ {{ libro }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Artículo 
+            </th>
+            <td>
+ {{ articulo }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Capítulo de Libro 
+            </th>
+            <td>
+ {{ capituloLibro }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Ponencia   
+            </th>
+            <td>
+ {{ ponencia }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Traducción de Obra Ajena   
+            </th>
+            <td>
+ {{ traduccionObra }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Trabajo de grado - Pregrado   
+            </th>
+            <td>
+ {{ trabajoGradoPregrado }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Trabajo de grado - Posgrado   
+            </th>
+            <td>
+                 {{ trabajoGradoPosgrado }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Software    
+            </th>
+            <td>
+ {{ software }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Modelo DS  
+            </th>
+            <td>
+ {{ modelo }}  
+            </td>            
+        </tr>
+        <tr>
+
+            <th>
+                Informe  
+            </th>
+            <td>
+ {{ informe }}  
+            </td>            
+        </tr>
+        <tr>
+            <th>
+                Total:
+            </th>
+            <td>
+                {{ anoCurso }}    
+            </td>            
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+
+
+{% block javascripts %}
+{% endblock %}
